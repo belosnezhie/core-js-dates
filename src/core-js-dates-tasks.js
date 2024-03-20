@@ -17,8 +17,10 @@
  * '01 Jan 1970 00:00:00 UTC' => 0
  * '04 Dec 1995 00:12:00 UTC' => 818035920000
  */
-function dateToTimestamp(/* date */) {
-  throw new Error('Not implemented');
+function dateToTimestamp(date) {
+  const currentMS = new Date(Date.UTC(1970));
+  const customDate = new Date(date);
+  return customDate - currentMS;
 }
 
 /**
@@ -31,8 +33,9 @@ function dateToTimestamp(/* date */) {
  * Date(2023, 5, 1, 8, 20, 55) => '08:20:55'
  * Date(2015, 10, 20, 23, 15, 1) => '23:15:01'
  */
-function getTime(/* date */) {
-  throw new Error('Not implemented');
+function getTime(date) {
+  const time = date.toTimeString().split(' ');
+  return time[0];
 }
 
 /**
@@ -46,8 +49,11 @@ function getTime(/* date */) {
  * '03 Dec 1995 00:12:00 UTC' => 'Sunday'
  * '2024-01-30T00:00:00.000Z' => 'Tuesday'
  */
-function getDayName(/* date */) {
-  throw new Error('Not implemented');
+function getDayName(date) {
+  const customDate = new Date(date);
+  const options = { weekday: 'long' };
+  const day = new Intl.DateTimeFormat('en-US', options).format(customDate);
+  return day;
 }
 
 /**
@@ -61,8 +67,22 @@ function getDayName(/* date */) {
  * Date('2024-02-13T00:00:00Z') => Date('2024-02-16T00:00:00Z')
  * Date('2024-02-16T00:00:00Z') => Date('2024-02-23T00:00:00Z')
  */
-function getNextFriday(/* date */) {
-  throw new Error('Not implemented');
+function getNextFriday(date) {
+  const nextFr = new Date(date);
+  const currentDay = nextFr.getDay();
+  let daysToFr = 0;
+
+  if (currentDay < 5) {
+    daysToFr = 5 - currentDay;
+  } else if (currentDay === 5) {
+    daysToFr = 7;
+  } else {
+    daysToFr = 5 + (7 - currentDay);
+  }
+
+  nextFr.setDate(nextFr.getDate() + daysToFr);
+
+  return nextFr;
 }
 
 /**
