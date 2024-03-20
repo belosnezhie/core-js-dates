@@ -156,8 +156,22 @@ function isDateInPeriod(date, period) {
  * '1999-01-05T02:20:00.000Z' => '1/5/1999, 2:20:00 AM'
  * '2010-12-15T22:59:00.000Z' => '12/15/2010, 10:59:00 PM'
  */
-function formatDate(/* date */) {
-  throw new Error('Not implemented');
+function formatDate(date) {
+  const customDate = new Date(date);
+  const year = customDate.getUTCFullYear();
+  const month = customDate.getUTCMonth() + 1;
+  const day = customDate.getUTCDate();
+  const hour = customDate.getUTCHours();
+  const minute = customDate.getUTCMinutes();
+  const seconds = customDate.getUTCSeconds();
+  const enHours = hour % 12 === 0 ? 12 : hour % 12;
+  const minToShow =
+    minute.toString().length === 1 ? `0${minute.toString()}` : minute;
+  const secToShow =
+    seconds.toString().length === 1 ? `0${seconds.toString()}` : seconds;
+  const period = hour < 12 ? 'AM' : 'PM';
+
+  return `${month}/${day}/${year}, ${enHours}:${minToShow}:${secToShow} ${period}`;
 }
 
 /**
@@ -172,8 +186,20 @@ function formatDate(/* date */) {
  * 12, 2023 => 10
  * 1, 2024 => 8
  */
-function getCountWeekendsInMonth(/* month, year */) {
-  throw new Error('Not implemented');
+function getCountWeekendsInMonth(month, year) {
+  let weekend = 0;
+  const maxMonth = new Date(year, month, 0);
+  const daysInMonth = maxMonth.getDate();
+
+  for (let i = 1; i <= daysInMonth; i += 1) {
+    const tempDate = new Date(year, month - 1, i);
+    const tempDay = tempDate.getDay();
+
+    if (tempDay === 0 || tempDay === 6) {
+      weekend += 1;
+    }
+  }
+  return weekend;
 }
 
 /**
