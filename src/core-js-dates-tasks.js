@@ -221,7 +221,7 @@ function getWeekNumberByDate(date) {
   // когда начался год
   // const firstDayOfTheYear = firstWeek.getDay();
   const dateDif = date - firstWeek;
-  const weeks = Math.ceil(dateDif / (7 * 24 * 60 * 60 * 1000));
+  const weeks = Math.ceil((dateDif + 1) / (7 * 24 * 60 * 60 * 1000));
   return weeks;
 }
 
@@ -293,8 +293,34 @@ function getQuarter(date) {
  * { start: '01-01-2024', end: '15-01-2024' }, 1, 3 => ['01-01-2024', '05-01-2024', '09-01-2024', '13-01-2024']
  * { start: '01-01-2024', end: '10-01-2024' }, 1, 1 => ['01-01-2024', '03-01-2024', '05-01-2024', '07-01-2024', '09-01-2024']
  */
-function getWorkSchedule(/* period, countWorkDays, countOffDays */) {
-  throw new Error('Not implemented');
+function getWorkSchedule(period, countWorkDays, countOffDays) {
+  const parseDate = (str) => {
+    const arr = str.split('-');
+    return new Date(arr[2], arr[1] - 1, arr[0]);
+  };
+
+  const arrDates = [];
+  const currentDay = parseDate(period.start);
+  const endDay = parseDate(period.end);
+  let workDaysLeft = countWorkDays;
+  while (endDay - currentDay >= 0) {
+    if (workDaysLeft > 0) {
+      const year = currentDay.getFullYear();
+      const month = currentDay.getMonth() + 1;
+      const day = currentDay.getDate();
+      const dayToShow =
+        day.toString().length === 1 ? `0${day.toString()}` : day;
+      const monthToShow =
+        month.toString().length === 1 ? `0${month.toString()}` : month;
+      arrDates.push(`${dayToShow}-${monthToShow}-${year}`);
+      workDaysLeft -= 1;
+      currentDay.setDate(currentDay.getDate() + 1);
+    } else {
+      currentDay.setDate(currentDay.getDate() + countOffDays);
+      workDaysLeft = countWorkDays;
+    }
+  }
+  return arrDates;
 }
 
 /**
