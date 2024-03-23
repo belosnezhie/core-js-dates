@@ -50,11 +50,9 @@ function getTime(date) {
  * '2024-01-30T00:00:00.000Z' => 'Tuesday'
  */
 function getDayName(date) {
-  const customDate = new Date(Date.UTC(date));
+  const customDate = new Date(date);
   const options = { weekday: 'long' };
-  const day = new Intl.DateTimeFormat('en-US', options).format(
-    customDate.toUTCString()
-  );
+  const day = new Intl.DateTimeFormat('en-US', options).format(customDate);
   return day;
 }
 
@@ -70,17 +68,21 @@ function getDayName(date) {
  * Date('2024-02-16T00:00:00Z') => Date('2024-02-23T00:00:00Z')
  */
 function getNextFriday(date) {
-  const currentDay = date.getUTCDay();
-  let daysTillFriday = 0;
+  const nextFr = new Date(date);
+  const currentDay = nextFr.getDay();
+  let daysToFr = 0;
+
   if (currentDay < 5) {
-    daysTillFriday = 5 - currentDay;
+    daysToFr = 5 - currentDay;
   } else if (currentDay === 5) {
-    daysTillFriday = 7;
+    daysToFr = 7;
   } else {
-    daysTillFriday = 5 + (7 - currentDay);
+    daysToFr = 5 + (7 - currentDay);
   }
-  date.setUTCDate(date.getUTCDate() + daysTillFriday);
-  return date;
+
+  nextFr.setDate(nextFr.getDate() + daysToFr);
+
+  return nextFr;
 }
 
 /**
